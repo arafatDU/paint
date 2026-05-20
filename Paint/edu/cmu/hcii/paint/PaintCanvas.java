@@ -11,13 +11,16 @@ public class PaintCanvas extends JPanel {
 
     private PaintObject temporaryObject;
     private PaintObject hoveringObject;
+    private int initialWidth;
+    private int initialHeight;
     
     public PaintCanvas(int initialWidth, int initialHeight) {
-        
         setPreferredSize(new Dimension(initialWidth, initialHeight));
-        
+        this.initialWidth = initialWidth;
+        this.initialHeight = initialHeight;
+
         paintObjects = new Vector();
-        
+
         history = new Vector();
         
     }
@@ -31,8 +34,8 @@ public class PaintCanvas extends JPanel {
         
         Rectangle clipBounds = g.getClipBounds();
         g.setColor(Color.white);
-        g.fillRect((int)clipBounds.getX(), (int)clipBounds.getX(), 
-                    (int)clipBounds.getWidth(), (int)clipBounds.getHeight());
+        g.fillRect((int)clipBounds.getX(), (int)clipBounds.getY(), 
+                (int)clipBounds.getWidth(), (int)clipBounds.getHeight());
         
         Iterator paintObjectIterator = paintObjects.iterator();
         while(paintObjectIterator.hasNext())
@@ -72,26 +75,52 @@ public class PaintCanvas extends JPanel {
     }
     
     public void addPaintObject(PaintObject newObject) {
-        
         history.addElement(new Vector(paintObjects));
         paintObjects.addElement(newObject);
+        recalcPreferredSize();
+        revalidate();
         repaint();
         
     }
     
     public void clear() {
-        
         history.addElement(new Vector(paintObjects));
         paintObjects.removeAllElements();
+        recalcPreferredSize();
+        revalidate();
         repaint();
 
     }
 
     public void undo() { 
+        if(history.size() > 0) {
+            Object last = history.remove(history.size() - 1);
+            paintObjects = (Vector)last;
+        } else {
+            paintObjects = new Vector();
+        }
+        recalcPreferredSize();
+        revalidate();
+        repaint();
         
-        paintObjects = (Vector)history.lastElement();
-        history.removeElement(history.lastElement());
-        
+    }
+
+    private void recalcPreferredSize() {
+        int maxW = initialWidth;
+        int maxH = initialHeight;
+        if(paintObjects != null) {
+            Iterator it = paintObjects.iterator();
+            while(it.hasNext()) {
+                try {
+                    PaintObject po = (PaintObject)it.next();
+                    Rectangle r = po.getBoundingBox();
+                    if(r.x + r.width > maxW) maxW = r.x + r.width;
+                    if(r.y + r.height > maxH) maxH = r.y + r.height;
+                } catch(Exception e) { }
+            }
+        }
+        Dimension d = getPreferredSize();
+        if(d.width != maxW || d.height != maxH) setPreferredSize(new Dimension(maxW, maxH));
     }
 
 
