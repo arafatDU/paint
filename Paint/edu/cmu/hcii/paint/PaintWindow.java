@@ -49,6 +49,7 @@ public class PaintWindow extends JFrame implements PaintObjectConstructorListene
         super("Paint");
      
         actions = new Actions(this);
+        actions.undoAction.setEnabled(false);
         
         setResizable(true);
         
