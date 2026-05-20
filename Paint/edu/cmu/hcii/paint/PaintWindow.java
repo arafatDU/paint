@@ -42,6 +42,8 @@ public class PaintWindow extends JFrame implements PaintObjectConstructorListene
             
         }
     };
+    private JSlider thicknessSlider;
+    private JPanel thicknessPanel;
     
     
     public PaintWindow(int initialWidth, int initialHeight) {
@@ -115,6 +117,19 @@ public class PaintWindow extends JFrame implements PaintObjectConstructorListene
         bSlider.setOpaque(false);
         bSlider.addChangeListener(colorChangeListener);
         bPanel.add(bSlider);
+
+        thicknessPanel = new JPanel(new FlowLayout());
+        thicknessPanel.setOpaque(false);
+        thicknessPanel.add(new JLabel("Thickness"));
+        thicknessSlider = new JSlider(1, 50, 5);
+        thicknessSlider.setOpaque(false);
+        thicknessSlider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                if(objectConstructor != null) objectConstructor.setThickness(thicknessSlider.getValue());
+                repaint();
+            }
+        });
+        thicknessPanel.add(thicknessSlider);
         
         colorPanel = new JPanel();
         colorPanel.setOpaque(false);
@@ -122,6 +137,7 @@ public class PaintWindow extends JFrame implements PaintObjectConstructorListene
         colorPanel.add(rPanel);
         colorPanel.add(gPanel);
         colorPanel.add(bPanel);
+        colorPanel.add(thicknessPanel);
         currentColorComponent.setPreferredSize(new Dimension(100, 50));
         colorPanel.add(currentColorComponent);
                 
@@ -157,7 +173,7 @@ public class PaintWindow extends JFrame implements PaintObjectConstructorListene
         objectConstructor = new PaintObjectConstructor(this);
         objectConstructor.setClass(PencilPaint.class);
         objectConstructor.setColor(new Color(0, 255, 0));
-        objectConstructor.setThickness(5);        
+        objectConstructor.setThickness(thicknessSlider.getValue());
         canvas.addMouseListener(objectConstructor);
         canvas.addMouseMotionListener(objectConstructor);
         

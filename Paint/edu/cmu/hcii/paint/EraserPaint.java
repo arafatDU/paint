@@ -4,14 +4,13 @@ import java.awt.*;
 public class EraserPaint extends PencilPaint {
 
     public void setColor(Color color) {
-        
-		this.color = Color.white;
+        this.color = Color.white;
         
     }
     
     public void setThickness(int thickness) {
-    	
-    	this.thickness = 25;
+    	// Respect requested thickness instead of forcing a fixed size
+    	this.thickness = thickness;
     	
     }
   
