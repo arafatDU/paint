@@ -1,0 +1,25 @@
+# Ignore build outputs
+out/
+bin/
+
+# Ignore IDE-specific files
+*.iml
+.idea/
+.vscode/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore compiled Java files
+*.class
+
+# Ignore JAR files
+*.jar
+
+# Ignore other unnecessary files
+__MACOSX/
